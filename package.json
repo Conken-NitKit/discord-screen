@@ -6,7 +6,7 @@
   "repository": "https://github.com/Conken-NitKit/discord-screen",
   "dependencies": {
     "discord.js": "^12.2.0",
-    "fs": "^0.0.1-security",
+    "heroku": "^7.42.1",
     "socket.io-client": "^2.3.0"
   }
 }

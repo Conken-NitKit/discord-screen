@@ -1,36 +1,16 @@
-const fs = require('fs')
 const Discord = require('discord.js')
 const client = new Discord.Client()
 
-//setting.jsonの読み込み
-let settings = JSON.parse(fs.readFileSync('./settings.json', 'utf8'))
-try {
-  if (settings.botToken.length === 0) {
-    throw "Can't read botToken"
-  } else if (settings.observeChannel.length === 0) {
-    throw "Can't read observeChannel"
-  } else if (settings.destinationRoom.length === 0) {
-    throw "Can't read destinationRoom"
-  }
-  token = settings.botToken
-  observeChannel = settings.observeChannel
-  destinationRoom = settings.destinationRoom
-} catch (e) {
-  console.log(e)
-  app.exit()
-}
-
 //メッセージ受信処理
 client.on('message', message => {
-  if (message.channel.name === observeChannel) {
+  if (message.channel.name === process.env.OBSERVE_CHANNEL) {
     console.log(message.author.username + ':' + message.content)
     sendMessage(message.content)
   }
 });
 
 //ログイン
-client.login(token)
-
+client.login(process.env.BOT_TOKEN)
 
 //Comment Screen
 const io = require('socket.io-client')
@@ -46,7 +26,7 @@ let socket = new io.connect('https://commentscreen.com', {
 
 //参加した部屋に投稿を送信する
 function sendMessage(massage) {
-  socket.emit('join', { room: destinationRoom })
+  socket.emit('join', { room: process.env.DESTINATION_ROOM })
   let array = makeJson(massage)
   let jsonStr = JSON.stringify(array)
   socket.emit('message', jsonStr)
